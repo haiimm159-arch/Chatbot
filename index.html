@@ -89,6 +89,7 @@
 
         <script src="https://unpkg.com/supersimpledev/babel.js"></script>
         <script type="text/babel">
+
         function ChatInput({chatMessages, setChatMessages}) {
             const [chatInput, setChatInput] = React.useState('')
             const inputRef = React.useRef(null);
@@ -200,7 +201,7 @@
 
             return (
                 <div className="app-container">
-                    <h1 className="chatbot-title">ChatBot</h1>
+                    <h1 className="chatbot-title">ChatBot - AI Assistant</h1>
                     <ChatMessages
                         chatMessages={chatMessages} 
                     />
