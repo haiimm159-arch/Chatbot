@@ -1,0 +1,1 @@
+Just an AI assistant, currently a prototype since it is just a study project
