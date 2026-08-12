@@ -98,6 +98,12 @@
                 setChatInput(event.target.value);
             }
 
+            function handleEscapeInputEvent(event) {
+                if (event.key === 'Escape') {
+                  setChatInput('')  
+                }
+            }
+
             function sendMessage (event) {
                 event.preventDefault();
                 if(chatInput.trim() === '') return;
@@ -135,6 +141,7 @@
                         value={chatInput}
                         onChange={handleInputTextEvent} 
                         ref={inputRef}
+                        onKeyDown={handleEscapeInputEvent}
                         className='chat-input'
                         size="30" 
                     />
