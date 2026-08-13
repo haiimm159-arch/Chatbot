@@ -104,31 +104,41 @@
                 }
             }
 
-            function sendMessage (event) {
+            async function sendMessage (event) {
                 event.preventDefault();
                 if(chatInput.trim() === '') return;
+
+                const loadingId = crypto.randomUUID();
+
                 setChatMessages([
                     ...chatMessages,
                     {
                         sender: 'user',
                         message: chatInput,
                         id: crypto.randomUUID()
+                    },
+                    {
+                        sender: 'robot',
+                        message: 'Loading...',
+                        id: loadingId
                     }
                 ])
                 setChatInput('');
                 inputRef.current.focus();
 
-                const response = Chatbot.getResponse(chatInput);
-                setChatMessages((previouseChatMessages) => {
-                    return [
-                        ...previouseChatMessages,
-                        {
-                            sender: 'robot',
-                            message: response,
-                            id: crypto.randomUUID()
+                const response =  await Chatbot.getResponseAsync(chatInput);
+
+                setChatMessages((previouseChatMessages) => 
+                    previouseChatMessages.map((chatMessage) => {
+                        if (chatMessage.id === loadingId) {
+                            return {
+                                ...chatMessage,
+                                message: response, 
+                            } 
                         }
-                    ]
-                })
+                        return chatMessage;
+                    }) 
+                )
             }
 
             return(               
