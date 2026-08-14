@@ -76,6 +76,12 @@
                 flex: 1;
                 overflow-y: auto;
             }
+
+            .send-button:disabled {
+                background-color: gray;
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
         </style>    
     </head>
     <body style="font-family: Arial, Helvetica, sans-serif;">
@@ -91,7 +97,8 @@
         <script type="text/babel">
 
         function ChatInput({chatMessages, setChatMessages}) {
-            const [chatInput, setChatInput] = React.useState('')
+            const [chatInput, setChatInput] = React.useState('');
+            const [isLoading, setIsLoading] = React.useState(false);
             const inputRef = React.useRef(null);
 
             function handleInputTextEvent(event) {
@@ -106,9 +113,10 @@
 
             async function sendMessage (event) {
                 event.preventDefault();
-                if(chatInput.trim() === '') return;
-
+                if(chatInput.trim() === '' || isLoading === true) return;
                 const loadingId = crypto.randomUUID();
+
+                setIsLoading(true);
 
                 setChatMessages([
                     ...chatMessages,
@@ -122,11 +130,14 @@
                         message: 'Loading...',
                         id: loadingId
                     }
-                ])
+                ]);
+
                 setChatInput('');
                 inputRef.current.focus();
 
                 const response =  await Chatbot.getResponseAsync(chatInput);
+
+                setIsLoading(false);
 
                 setChatMessages((previouseChatMessages) => 
                     previouseChatMessages.map((chatMessage) => {
@@ -155,7 +166,11 @@
                         className='chat-input'
                         size="30" 
                     />
-                    <button className='send-button'>Send</button>
+                    <button 
+                        className='send-button'
+                        disabled={isLoading}
+                        >Send
+                    </button>
                 </form>
             )
         }
