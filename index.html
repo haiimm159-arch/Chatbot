@@ -135,9 +135,15 @@
                 setChatInput('');
                 inputRef.current.focus();
 
-                const response =  await Chatbot.getResponseAsync(chatInput);
-
-                setIsLoading(false);
+                let response;
+                try {
+                    response =  await Chatbot.getResponseAsync(chatInput);
+                } catch(error) {
+                    console.error(error)
+                    response = 'Sorry, something went wrong, please try again later.'
+                } finally {
+                    setIsLoading(false);
+                }
 
                 setChatMessages((previouseChatMessages) => 
                     previouseChatMessages.map((chatMessage) => {
@@ -156,7 +162,6 @@
                 <form 
                     className='input-form' 
                     onSubmit={sendMessage} 
-                    type="submit"
                 >
                     <input 
                         value={chatInput}
@@ -169,7 +174,8 @@
                     <button 
                         className='send-button'
                         disabled={isLoading}
-                        >Send
+                        type="submit"
+                            >Send
                     </button>
                 </form>
             )
