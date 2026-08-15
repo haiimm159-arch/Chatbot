@@ -5,6 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>ChatBot</title>
         <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+
             .app-container{
                 height: 100vh;
                 max-width: 500px;
@@ -34,6 +40,7 @@
                 justify-content: center;
                 width: 100%;
                 gap:10px;
+                margin-bottom: 60px;
             }
 
             .chatbot-title{
@@ -52,6 +59,10 @@
 
             .user-message .message-bubble {
                 background-color: rgb(231, 243, 231);
+            }
+
+            .chat-message-profile {
+                width: 45px;
             }
 
             .chat-input {
@@ -76,6 +87,7 @@
                 flex: 1;
                 overflow-y: auto;
                 scrollbar-width: none;
+                margin-top: 10px;
             }
 
             .send-button:disabled {
@@ -83,9 +95,21 @@
                 cursor: not-allowed;
                 opacity: 0.6;
             }
+
+            .loading-gif {
+                width: 60px;
+                height: 60px;
+                display: block;
+                margin-left: -5px;
+            }
+
+            .loading-message {
+                background-color: transparent;
+                padding: 0;
+            }
         </style>    
     </head>
-    <body style="font-family: Arial, Helvetica, sans-serif;">
+    <body>
         <div class="js-container"></div>
 
         <script src="https://unpkg.com/supersimpledev/react.js"></script>
@@ -129,6 +153,7 @@
                     {
                         sender: 'robot',
                         message: 'Loading...',
+                        isLoading: true,
                         id: loadingId
                     }
                 ]);
@@ -151,7 +176,8 @@
                         if (chatMessage.id === loadingId) {
                             return {
                                 ...chatMessage,
-                                message: response, 
+                                message: response,
+                                isLoading: false 
                             } 
                         }
                         return chatMessage;
@@ -182,7 +208,7 @@
             )
         }
 
-        function ChatMessage({ message, sender }) {
+        function ChatMessage({ message, sender, isLoading }) {
             return (
                 <div className={`message-row ${
                     sender === 'robot' ? 'robot-message' : 'user-message'}`
@@ -190,17 +216,30 @@
                     {
                         sender === 'robot' && 
                         <img 
-                            width="50"
+                            className= "chat-message-profile"
                             src ="./images/robot.png" 
                         />
                     }
-                    <span className='message-bubble'>
-                        {message}           
+                    <span className= {`message-bubble ${
+                            isLoading ? 'loading-message' : ''
+                        }`}
+                    >
+                        {
+                            isLoading 
+                            ? (<img
+                                src="images/loading2.gif"
+                                className="loading-gif"
+                                alt="loading"
+                            />
+                            ) : (
+                                message          
+                            )
+                        }
                     </span>
                     { 
                         sender === 'user' &&
                         <img 
-                            width="50"
+                            className="chat-message-profile"
                             src="./images/user.png" 
                         />
                     }
@@ -223,6 +262,7 @@
                         return (<ChatMessage 
                             sender={chatMessage.sender}
                             message={chatMessage.message}
+                            isLoading={chatMessage.isLoading}
                             key={chatMessage.id}
                         />)
                     })}
