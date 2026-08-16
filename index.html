@@ -252,14 +252,21 @@
                 </div>
             )
         }
+
+        function useAutoScroll(dependencies) {
+            const containerRef = React.useRef(null);
+            React.useEffect(() => {
+                if (containerRef) {
+                    containerRef.current.scrollIntoView(
+                        {behavior: 'smooth'}
+                    )  
+                }
+            }, [dependencies]);
+            return containerRef;
+        }
         
         function ChatMessages({chatMessages}) {
-            const bottomRef = React.useRef(null);
-            React.useEffect(() => {
-                bottomRef.current.scrollIntoView(
-                    {behavior: 'smooth'}
-                )
-            },[chatMessages]);
+            const bottomRef = useAutoScroll(chatMessages)
 
             return (
                 <div className="messages-container">
