@@ -45,7 +45,7 @@
 
             .chatbot-title{
                 display: flex;
-                justify-content: center;
+                text-align: center;
                 font-size: 50px;
                 color: green;
             }
@@ -87,7 +87,6 @@
                 flex: 1;
                 overflow-y: auto;
                 scrollbar-width: none;
-                margin-top: 10px;
             }
 
             .send-button:disabled {
@@ -106,6 +105,12 @@
             .loading-message {
                 background-color: transparent;
                 padding: 0;
+            }
+
+            .secondary-title{
+                color: rgb(150, 148, 148);
+                font-size: 20px;
+                text-align: center;
             }
         </style>    
     </head>
@@ -274,15 +279,24 @@
 
 
         function App() { 
-            const [chatMessages, setChatMessages] = React.useState([{
-                sender:'robot',
-                message:'Hello, how can I help you today? :)',
-                id: crypto.randomUUID()
-            }]);
+            const [chatMessages, setChatMessages] = React.useState([]);
 
             return (
                 <div className="app-container">
-                    <h1 className="chatbot-title">ChatBot - AI Assistant</h1>
+
+                    <h2 
+                        className="chatbot-title">
+                        ChatBot - AI Assistant
+                    </h2>
+
+                    <span 
+                        className="secondary-title">
+                        {chatMessages.length === 0
+                            ? 'Welcome to the chatbot project, send a message using the textbox below'
+                            : ''
+                        }
+                    </span>
+
                     <ChatMessages
                         chatMessages={chatMessages} 
                     />
